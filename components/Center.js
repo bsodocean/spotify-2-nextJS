@@ -1,5 +1,5 @@
 import { ChevronDownIcon } from "@heroicons/react/outline";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { shuffle } from "lodash";
 import { useRecoilValue, useRecoilState } from "recoil";
@@ -37,14 +37,17 @@ function Center() {
       .catch((err) => console.log("Something's wrong I can feel it", err));
   }, [spotifyApi, playlistId]);
 
-  console.log(playlist);
-
   return (
-    <div className='flex-grow '>
+    <div className='flex-grow h-screen overflow-y-scroll scrollbar-hide select-none relative '>
       <header className='absolute top-5 right-8'>
         <div
           className='flex items-center bg-black space-x-3 opacity-90 hover:opacity-80
           cursor-pointer rounded-full p-1 pr-2 text-white'
+          onClick={() =>
+            signOut({
+              callbackUrl: `${window.location.origin}/login`,
+            })
+          }
         >
           <img className='rounded-full w-9 h-10' src={session?.user?.image} />
           <h2>{session?.user.name}</h2>
@@ -59,10 +62,12 @@ function Center() {
           className='h-44 w-44 shadow-2xl'
           src={playlist?.images?.[0]?.url}
         />
-        <p className='flex flex-col'>PLAYLIST</p>
-        <h1 className='text-2xl md:text-3xl xl:text-5xl font-bold'>
-          {playlist?.name}
-        </h1>
+        <div>
+          <p>PLAYLIST</p>
+          <h1 className='text-2xl md:text-3xl xl:text-5xl font-bold'>
+            {playlist?.name}
+          </h1>
+        </div>
       </section>
 
       <div>
